@@ -1,3 +1,5 @@
+const { before } = require('node:test');
+
 /*
  * Copyright (c) 2016-present Invertase Limited & Contributors
  *
@@ -14,7 +16,6 @@
  * limitations under the License.
  *
  */
-
 describe('remoteConfig() modular', function () {
   describe('firebase v8 compatibility', function () {
     describe('fetch()', function () {
@@ -330,6 +331,54 @@ describe('remoteConfig() modular', function () {
 
           should(reset).equal(null);
         }
+      });
+    });
+
+    xdescribe('addOnUpdateListener()', function () {
+      // before(async function () {
+      //   console.error('running before block');
+      // });
+      // TODO:
+      // - write functions function that uses admin API to change a rmeote-config value to the one requested
+      //  - the function will require a correctly configured admin app, key mgmt is a pain, so it will only be remote
+      //  - use the REST API helper to call the function
+
+      // - implement native listener count method for test only
+      // - single listener:
+      //   - verify native listener count is zero
+      //   - add a listener, call function to set value, make sure listener is called
+      //   - verify native listener count is one
+      //   - remove the listener, call function to set value, make sure listener is not called
+      //   - verify native listener count is zero again
+      it('adds a listener', async function () {
+        const functionRunner = firebase.functions().httpsCallable('testFunctionRemoteConfigUpdate');
+        const response = await functionRunner('hello');
+        response.data.should.equal('not implemented');
+        console.log('checking single listener functionality');
+      });
+      // - multiple listeners:
+      //   - verify native listener count is zero
+      //   - add three listeners, call function to set value, make sure listeners are called
+      //   - remove second listener, call function to set value, make sure only first/third are called
+      //   - remove first/third listeners, call function to set value, make sure no listeners are called
+      it('manages multiple listeners', async function () {
+        console.log('checking multiple listener functionality');
+      });
+      // - react-native reload
+      //   - make sure native count is zero
+      //   - add a listener, assert native count one
+      //   - rnReload via detox, assert native count is zero
+      it('handles react-native reload', async function () {
+        console.log('checking listener functionality across javascript layer reload');
+      });
+      // - test update contents
+      //   - add listener
+      //   - set a default value for a parameter and fetch it to verify source is local
+      //   - update the parameter via function and verify that listener is called with that key and server value now
+      //   - delete the parameter and make sure the listener is called with delete
+      //   - add the parameter and verify listener is called with added param    describe('addOnUpdateListener()', function () {
+      it('receives updates correctly', async function () {
+        console.log('checking listener update functionality');
       });
     });
   });

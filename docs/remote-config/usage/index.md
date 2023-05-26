@@ -154,8 +154,7 @@ if (awesomeNewFeature.getSource() === 'remote') {
 ## Caching
 
 Although Remote Config is a data-store, it is not designed for frequent reads - Firebase heavily caches the parameters
-(default is 12 hours). By design, this prevents the values being able to change frequently and potentially cause users
-confusion.
+(default is 12 hours).
 
 You can however specify your own cache length by specifically calling the `fetch` method with the number of seconds to
 cache the values for:
@@ -174,4 +173,23 @@ You can also apply a global cache frequency by calling the `setConfigSettings` m
 await remoteConfig().setConfigSettings({
   minimumFetchIntervalMillis: 30000,
 });
+```
+
+## Real-time updates
+
+The remote-config has the ability to trigger [real-time Remote Config updates](https://firebase.google.com/docs/remote-config/real-time)
+in applications that attach one or more listeners for them.
+
+```js
+// Add a config update listener where appropriate, perhaps in app startup, perhaps for a specific page
+// You may add more than one listener so listeners may be screen-specific and only handle certain keys
+// depending on application requirements
+let remoteConfigUpdateListener = await remoteConfig().addOnConfigUpdateListener((updatedKeys) => { 
+
+  // Updated keys are keys that are added, removed, changed value, changed metadata, or changed source
+  console.log('remote-config updated keys: ' + JSON.stringify(updatedKeys));
+});
+
+// be sure to remove the listener when no longer needed
+remoteConfigUpdateListener.remove();
 ```
